@@ -6,7 +6,7 @@ services:
       --model google/gemma-3-4b-it
       --host 0.0.0.0
       --port 8000
-      --max-model-len 4096
+      --max-model-len 65536
       --gpu-memory-utilization 0.8
       --chat-template /app/chat_template_gemma3.jinja
     ports:

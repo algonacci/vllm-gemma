@@ -1,29 +1,35 @@
+{{ bos_token }}
+
+{# Kalau pesan pertama system, gabungkan ke user pertama #}
 {% if messages[0]['role'] == 'system' %}
+  {% set system_message = messages[0]['content'] | trim + '\n\n' %}
   {% set loop_messages = messages[1:] %}
-  {% set system_message = messages[0]['content'].strip() + '\n\n' %}
 {% else %}
-  {% set loop_messages = messages %}
   {% set system_message = '' %}
+  {% set loop_messages = messages %}
 {% endif %}
 
 {% for message in loop_messages %}
+  {# Pastikan role selang-seling user/assistant #}
   {% if (message['role'] == 'user') != (loop.index0 % 2 == 0) %}
     {{ raise_exception('Conversation roles must alternate user/assistant/user/assistant/...') }}
   {% endif %}
 
-  {% if loop.index0 == 0 %}
-    {% set content = system_message + message['content'] %}
-  {% else %}
-    {% set content = message['content'] %}
-  {% endif %}
-
+  {# Ubah 'assistant' -> 'model' sesuai konvensi Gemma #}
   {% if message['role'] == 'assistant' %}
     {% set role = 'model' %}
   {% else %}
     {% set role = message['role'] %}
   {% endif %}
 
-  {{ '<start_of_turn>' + role + '\n' + content.strip() + '<end_of_turn>\n' }}
+  {# Gabungkan system + user pertama #}
+  {% if loop.first %}
+    {% set content = system_message + message['content'] %}
+  {% else %}
+    {% set content = message['content'] %}
+  {% endif %}
+
+  {{ '<start_of_turn>' + role + '\n' + content | trim + '<end_of_turn>\n' }}
 {% endfor %}
 
 {% if add_generation_prompt %}

@@ -8,7 +8,6 @@ services:
       --port 8000
       --max-model-len 64000
       --gpu-memory-utilization 0.8
-      --chat-template /app/chat_template_gemma3_simple.jinja
     ports:
       - "5095:8000"
     environment:

@@ -8,13 +8,14 @@ services:
       --port 8000
       --max-model-len 4096
       --gpu-memory-utilization 0.8
+      --chat-template /app/chat_template_gemma3.jinja
     ports:
       - "5095:8000"
     environment:
       - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN}
     volumes:
       - ~/.cache/huggingface:/root/.cache/huggingface
-    # ⬇️ bagian penting: ini ekuivalen `--gpus all` di docker run
+      - ./chat_template_gemma3.jinja:/app/chat_template_gemma3.jinja:ro
     deploy:
       resources:
         reservations:

@@ -1,0 +1,6 @@
+{{ bos_token }}{% for message in messages %}{% set last = loop.last %}{% if message['role'] == 'user' or message['role'] == 'system' %}<start_of_turn>user
+{{ message['content'] }}<end_of_turn>
+{% if last %}<start_of_turn>model
+{% endif %}{% elif message['role'] == 'assistant' %}<start_of_turn>model
+{{ message['content'] }}{% if not last %}<end_of_turn>
+{% endif %}{% endif %}{% endfor %}

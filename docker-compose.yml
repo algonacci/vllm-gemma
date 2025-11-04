@@ -1,0 +1,13 @@
+services:
+  vllm-gemma3-27b-it:
+    image: vllm/vllm-openai:latest
+    container_name: vllm-gemma3-27b-it
+    command: >
+      --model google/gemma-3-27b-it
+      --host 0.0.0.0
+      --port 8000
+    ports:
+      - "5095:8000"
+    environment:
+      - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN}
+    restart: unless-stopped
